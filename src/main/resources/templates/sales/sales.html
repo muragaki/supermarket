@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>SalesList</title>
+<link th:href="@{/css/sales.css}" rel="styleSheet">
+</head>
+<body>
+	<h3>購入履歴</h3>
+	<table border="1">
+		<tr>
+			<th>購入日時</th>
+			<th>商品コード</th>
+			<th>商品名</th>
+			<th>単価</th>
+			<th>個数</th>
+			<th>購入金額</th>
+		</tr>
+		<tr th:each="sales : ${salesForm.salesList}" align="center">
+			<td th:text="${#temporals.format(sales.salestime, 'yyyy年MM月dd日 HH時mm分ss秒')}"></td>
+			<td th:text="${sales.itemcode}"></td>
+			<td th:text="${sales.item.itemname}"></td>
+			<td th:text="${sales.item.itemprice}" align="right"></td>
+			<td th:text="${sales.sales}" align="right"></td>
+			<td th:text="${sales.amount}" align="right"></td>
+		</tr>
+	</table>
+	<div style="text-align: center;"><a th:href="@{'/goods'}" align="right">商品一覧画面へ</a></div>
+</body>
+</html>

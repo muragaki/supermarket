@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>SalesList</title>
+<link th:href="@{/css/sales.css}" rel="styleSheet">
+</head>
+<body>
+	<h3>売上一覧</h3>
+	<div style="text-align: center;"><a th:href="@{'/admin'}" align="right">管理者メニューに戻る</a></div>
+	<form th:action="@{'/admin/saleslist/serch'}" method="get">
+		UserID：<select name="userid">
+			<option value="all" selected>all</option>
+			<option th:each="user : ${salesForm.userList}" th:text="${user.lastName}+' '+${user.firstName}" th:value="${user.userId}"></option>
+		</select>
+		　開始日：<input type="date" name="firstDate" th:value="${today}">
+		～終了日：<input type="date" name="lastDate" th:value="${today}">
+		<input type="submit" value="検索">
+	</form>
+	<table border="1">
+		<tr>
+			<th>売上日時</th>
+			<th>商品コード</th>
+			<th>商品名</th>
+			<th>単価</th>
+			<th>個数</th>
+			<th>売上金額</th>
+			<th>UserID</th>
+			<th>氏名</th>
+		</tr>
+		<tr th:each="sales : ${salesForm.salesList}" align="center">
+			<td th:text="${#temporals.format(sales.salestime, 'yyyy年MM月dd日 HH時mm分ss秒')}"></td>
+			<td th:text="${sales.itemcode}"></td>
+			<td th:text="${sales.item.itemname}"></td>
+			<td th:text="${sales.item.itemprice}" align="right"></td>
+			<td th:text="${sales.sales}" align="right"></td>
+			<td th:text="${sales.amount}" align="right"></td>
+			<td th:text="${sales.userid}"></td>
+			<td th:text="${sales.user.lastName} + ' ' + ${sales.user.firstName}"></td>
+		</tr>
+	</table>
+</body>
+</html>

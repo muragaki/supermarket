@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>stockList</title>
+<link th:href="@{/css/stock.css}" rel="styleSheet">
+</head>
+<body>
+	<h3>在庫一覧</h3>
+	<div style="text-align: center;"><a th:href="@{'/admin'}" align="right">管理者メニューに戻る</a></div>
+	<div style="text-align: center;"><a th:href="@{'/stock/order'}" align="right">発注</a></div>
+	<div style="text-align: center;"><a th:href="@{'/stock/warehousing'}" align="right">入庫</a></div>
+	<table border="1">
+		<tr>
+			<th>商品コード</th>
+			<th>商品名</th>
+			<th>単価</th>
+			<th>在庫個数</th>
+			<th>基準値</th>
+		</tr>
+		<tr th:each="item : ${stockForm.stockList}" align="center">
+			<td th:text="${item.itemcode}"></td>
+			<td th:text="${item.itemname}"></td>
+			<td th:text="${item.itemprice}" align="right"></td>
+			<td th:if="${item.stock} == null" align="right">***</td>
+			<td th:unless="${item.stock} == null" th:text="${item.stock.stock}" align="right"></td>
+			<td th:if="${item.stock} == null" align="right">***</td>
+			<td th:unless="${item.stock} == null" th:text="${item.stock.standard_stock}" align="right"></td>
+		</tr>
+	</table>
+</body>
+</html>
