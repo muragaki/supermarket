@@ -37,16 +37,16 @@ import com.example.supermarket.domain.service.user.SuperUserDetailsService;
 public class AdminController {
 	
 	@Autowired
-	SuperUserDetailsService superUserDetailsService;
+	SuperUserDetailsService superUserDetailsService;	// ユーザサービス
 	
 	@Autowired
-	GoodsService goodsService;
+	GoodsService goodsService;	// 商品サービス
 	
 	@Autowired
-	SalesService salesService;
+	SalesService salesService;	// 売上サービス
 	
 	@Autowired
-	StockService stockService;
+	StockService stockService;	// 在庫サービス
 
 	/**
 	 * 管理者メニュー表示
@@ -159,7 +159,7 @@ public class AdminController {
 		if (!user.getRoleName().getValue().equals(userForm.getRolename().getValue())) {
 			user.setRoleName(userForm.getRolename());
 		}
-		superUserDetailsService.userregist(user);
+		superUserDetailsService.userupdateregist(user);
 		model.addAttribute("userForm", userForm);
 		return "admin/editconf";
 	}
@@ -222,6 +222,14 @@ public class AdminController {
 		goodsService.itemregist(item);
 		return "admin/itemeditconf";
 	}
+	
+	/**
+	 * 売上一覧表示
+	 * 
+	 * @param salesForm
+	 * @param model
+	 * @return
+	 */
 	@GetMapping("admin/saleslist")
 	String saleslist(SalesForm salesForm, Model model) {
 		salesForm.setSalesList(salesService.findSalesAll());
@@ -230,6 +238,16 @@ public class AdminController {
 		model.addAttribute("today", today);
 		return "admin/saleslist";
 	}
+	
+	/**
+	 * 売上検索
+	 * 
+	 * @param searchForm
+	 * @param br
+	 * @param salesForm
+	 * @param model
+	 * @return
+	 */
 	@GetMapping("admin/saleslist/serch")
 	String serch(@ModelAttribute("searchForm") @Validated SearchForm searchForm, BindingResult br,
 			SalesForm salesForm, Model model) {
@@ -250,6 +268,14 @@ public class AdminController {
 		model.addAttribute("today", LocalDateTime.now().toString().substring(0, 10));
 		return "admin/salesList";
 	}
+	
+	/**
+	 * 在庫表示
+	 * 
+	 * @param stockForm
+	 * @param model
+	 * @return
+	 */
 	@GetMapping("admin/stocklist")
 	String stocklist(StockForm stockForm, Model model) {
 		stockForm.setStockList(goodsService.findGoods());
