@@ -18,12 +18,14 @@
 		<tr>
 			<th>商品コード</th>
 			<th>商品名</th>
+			<th>商品画像</th>
 			<th>単価</th>
 			<th>カート</th>
 		</tr>
 		<tr th:each="item : ${goods}" align="center">
 			<td th:text="${item.itemcode}"></td>
 			<td th:text="${item.itemname}"></td>
+			<td> <img th:src="@{/picture/{item}.jpg (item=${item.itempicture})}"></td>
 			<td th:text="${item.itemprice}" align="right"></td>
 <!--/*		<td th:text="${item.enableflag}"></td> */-->
 			<td>

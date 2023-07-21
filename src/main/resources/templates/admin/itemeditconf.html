@@ -17,6 +17,12 @@
 			<td><span th:text="${itemEditForm.itemname}"></span></td>
 		</tr>
 		<tr>
+			<td>商品画像</td>
+			<td>
+				<img th:src="@{/picture/{item}.jpg (item=${itemEditForm.itempicture})}">
+			</td>
+		</tr>
+		<tr>
 			<td>単価：</td>
 			<td><span th:text="${itemEditForm.itemprice}"></span></td>
 		</tr>

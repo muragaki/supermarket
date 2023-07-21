@@ -7,7 +7,7 @@
 <body>
 	<h3>商品情報変更</h3>
 	<a th:href="@{/admin/goodslist}">商品一覧へ戻る</a>
-	<form th:action="@{/admin/itemeditconf}" method="post" th:object="${itemEditForm}">
+	<form th:action="@{/admin/itemeditconf}" method="post" enctype="multipart/form-data" th:object="${itemEditForm}">
 		<table>
 			<tr>
 				<td>商品コード：</td>
@@ -21,6 +21,13 @@
 				<td>
 					<input type="text" name="itemname" th:value="${itemEditForm.itemname}" />
 					<span th:errors="*{itemname}" style="color:red"></span>
+				</td>
+			</tr>
+			<tr>
+				<td>商品画像</td>
+				<td>
+					<img th:src="@{/picture/{item}.jpg (item=${itemEditForm.itempicture})}">
+					<input type="file" name="upload_file" /><br />
 				</td>
 			</tr>
 			<tr>

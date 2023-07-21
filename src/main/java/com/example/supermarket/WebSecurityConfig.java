@@ -32,6 +32,9 @@ public class WebSecurityConfig {
 		).authorizeHttpRequests(authz -> authz
 				.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
 				.requestMatchers("/").permitAll()
+				.requestMatchers("/js/**").permitAll()
+				.requestMatchers("/css/**").permitAll()
+				.requestMatchers("/picture/**").permitAll()
 				.requestMatchers("/goods").permitAll()
 				.requestMatchers("/signup").permitAll()
 				.requestMatchers("/admin/**").hasRole("ADMIN")

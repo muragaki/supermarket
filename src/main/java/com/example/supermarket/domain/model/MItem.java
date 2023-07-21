@@ -3,7 +3,7 @@ package com.example.supermarket.domain.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -21,10 +21,10 @@ public class MItem {
 	@Id
 	private String itemcode;
 	private String itemname;
-	private int itemprice;
-	@ManyToOne
+	private Integer itemprice;
+	private String itempicture;
+	@OneToOne
 	@JoinColumn(name="itemcode", insertable=false, updatable=false)
 	private Stock stock;
-
 	private boolean enableflag;
 }

@@ -14,6 +14,7 @@ public class ItemEditForm {
 	private String itemcode;
 	@Size(min=1, max=16)
 	private String itemname;
+	private String itempicture;
 	@Min(1)
 	@Max(9999)
 	private int itemprice;

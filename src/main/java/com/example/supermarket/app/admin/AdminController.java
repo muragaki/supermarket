@@ -14,10 +14,13 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.supermarket.app.sales.SalesForm;
 import com.example.supermarket.app.stock.StockForm;
+import com.example.supermarket.app.storage.StorageService;
 import com.example.supermarket.domain.model.MItem;
 import com.example.supermarket.domain.model.RoleName;
 import com.example.supermarket.domain.model.User;
@@ -34,7 +37,15 @@ import com.example.supermarket.domain.service.user.SuperUserDetailsService;
  * @version 1.0
  */
 @Controller
+@RequestMapping("admin")
 public class AdminController {
+	
+	StorageService storageService;
+	
+	
+	public AdminController(StorageService storageService) {
+		this.storageService = storageService;
+	}
 	
 	@Autowired
 	SuperUserDetailsService superUserDetailsService;	// ユーザサービス
@@ -53,7 +64,7 @@ public class AdminController {
 	 * 
 	 * @return admin/adminmenu View
 	 */
-	@GetMapping("admin")
+	@GetMapping("")
 	String admin() {
 		return "admin/adminmenu";
 	}
@@ -65,7 +76,7 @@ public class AdminController {
 	 * @param model
 	 * @return admin/newuser
 	 */
-	@GetMapping("admin/newuser")
+	@GetMapping("newuser")
 	String newuser(UserForm userForm, Model model) {
 		userForm.setUsername("username");
 		userForm.setPassword("password");
@@ -84,7 +95,7 @@ public class AdminController {
 	 * @param model
 	 * @return admin/signup View
 	 */
-	@PostMapping("admin/signup")
+	@PostMapping("signup")
 	String signup(@ModelAttribute("userForm") @Validated UserForm userForm, BindingResult br, Model model) {
 		if (br.hasErrors()) {
 			userForm.setRoleNameList(new ArrayList<RoleName>(Arrays.asList(RoleName.ADMIN,RoleName.USER)));
@@ -107,7 +118,7 @@ public class AdminController {
 	 * @param model
 	 * @return admin/userlist View
 	 */
-	@GetMapping("admin/userlist")
+	@GetMapping("userlist")
 	String userlist(Model model) {
 		List<User> userlist = superUserDetailsService.getUserAll();
 		model.addAttribute("userlist", userlist);
@@ -122,7 +133,7 @@ public class AdminController {
 	 * @param model
 	 * @return admin/useredit View
 	 */
-	@GetMapping("admin/edit")
+	@GetMapping("edit")
 	String useredit(@RequestParam("userId") String userId, UserEditForm userForm, Model model) {
 		User user = superUserDetailsService.findById(userId);
 		userForm.setUsername(user.getUserId());
@@ -143,7 +154,7 @@ public class AdminController {
 	 * @param model
 	 * @return admin/editconf View
 	 */
-	@PostMapping("admin/editconf")
+	@PostMapping("editconf")
 	String editconf(@ModelAttribute("userForm") @Validated UserEditForm userForm, BindingResult br, Model model) {
 		if (br.hasErrors()) {
 			userForm.setRoleNameList(new ArrayList<RoleName>(Arrays.asList(RoleName.ADMIN,RoleName.USER)));
@@ -170,7 +181,7 @@ public class AdminController {
 	 * @param model
 	 * @return admin/goodslist
 	 */
-	@GetMapping("admin/goodslist")
+	@GetMapping("goodslist")
 	String goodslist(Model model) {
 		List<MItem> goodslist = goodsService.findGoods();
 		model.addAttribute("goodsList", goodslist);
@@ -185,11 +196,12 @@ public class AdminController {
 	 * @param model
 	 * @return admin/itemedit
 	 */
-	@GetMapping("admin/itemedit")
+	@GetMapping("itemedit")
 	String itemedit(@RequestParam("itemcode") String itemcode, ItemEditForm itemEditForm, Model model) {
 		MItem item = goodsService.findItem(itemcode);
 		itemEditForm.setItemcode(item.getItemcode());
 		itemEditForm.setItemname(item.getItemname());
+		itemEditForm.setItempicture(item.getItempicture());
 		itemEditForm.setItemprice(item.getItemprice());
 		itemEditForm.setEnableflag(item.isEnableflag());
 //		model.addAttribute("item", itemEditForm);
@@ -204,14 +216,18 @@ public class AdminController {
 	 * @param model
 	 * @return admin/itemeditconf
 	 */
-	@PostMapping("admin/itemeditconf")
-	String itemeditconf(@ModelAttribute("itemEditForm") @Validated ItemEditForm itemEditForm, BindingResult br, Model model) {
+	@PostMapping("itemeditconf")
+	String itemeditconf(@ModelAttribute("itemEditForm") @Validated ItemEditForm itemEditForm, BindingResult br,@RequestParam("upload_file") MultipartFile multipartFile, Model model) {
 		if (br.hasErrors()) {
 			return "admin/itemedit";
 		}
 		MItem item = goodsService.findItem(itemEditForm.getItemcode());
 		if (!item.getItemname().equals(itemEditForm.getItemname())) {
 			item.setItemname(itemEditForm.getItemname());
+		}
+		if (!item.getItempicture().equals(itemEditForm.getItempicture())) {
+			item.setItempicture(itemEditForm.getItempicture());
+			storageService.store(multipartFile);
 		}
 		if (item.getItemprice() != itemEditForm.getItemprice()) {
 			item.setItemprice(itemEditForm.getItemprice());
@@ -230,7 +246,7 @@ public class AdminController {
 	 * @param model
 	 * @return
 	 */
-	@GetMapping("admin/saleslist")
+	@GetMapping("saleslist")
 	String saleslist(SalesForm salesForm, Model model) {
 		salesForm.setSalesList(salesService.findSalesAll());
 		salesForm.setUserList(superUserDetailsService.getUserAll());
@@ -248,7 +264,7 @@ public class AdminController {
 	 * @param model
 	 * @return
 	 */
-	@GetMapping("admin/saleslist/serch")
+	@GetMapping("saleslist/serch")
 	String serch(@ModelAttribute("searchForm") @Validated SearchForm searchForm, BindingResult br,
 			SalesForm salesForm, Model model) {
 		if (br.hasErrors()) {
@@ -276,7 +292,7 @@ public class AdminController {
 	 * @param model
 	 * @return
 	 */
-	@GetMapping("admin/stocklist")
+	@GetMapping("stocklist")
 	String stocklist(StockForm stockForm, Model model) {
 		stockForm.setStockList(goodsService.findGoods());
 		return "admin/stocklist";

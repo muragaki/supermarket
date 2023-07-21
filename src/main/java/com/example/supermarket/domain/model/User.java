@@ -10,6 +10,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * ユーザー
+ * エンティティクラス
+ * 
+ * @author Muragaki
+ * @version 1.0
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,10 +24,10 @@ import lombok.NoArgsConstructor;
 @Table(name = "usr")
 public class User {
 	@Id
-	private String userId;
-	private String password;
-	private String firstName;
-	private String lastName;
-	@Enumerated(EnumType.STRING)
-	private RoleName roleName;
+	private String userId;			// ユーザーID
+	private String password;		// パスワード
+	private String firstName;		// 氏名　姓
+	private String lastName;		// 氏名　名
+	@Enumerated(EnumType.STRING)	// DB登録は文字列型
+	private RoleName roleName;		// USER/ADMIN
 }
