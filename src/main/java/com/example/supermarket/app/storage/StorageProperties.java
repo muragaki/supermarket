@@ -2,6 +2,7 @@ package com.example.supermarket.app.storage;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+@Service
 @ConfigurationProperties("storage")
 public class StorageProperties {
 	
